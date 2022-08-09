@@ -1,4 +1,7 @@
-<div class="d-flex flex-wrap justify-content-center">
+<div
+  *ngIf="words.length; else noWordsFound"
+  class="d-flex flex-wrap justify-content-center"
+>
   <div
     class="badge bg-primary m-1"
     style="width: 130px;"
@@ -7,3 +10,6 @@
     {{ word }}
   </div>
 </div>
+<ng-template #noWordsFound>
+  <div class="text-center display-6">No Words Found</div>
+</ng-template>
