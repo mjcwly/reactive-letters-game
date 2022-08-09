@@ -10,8 +10,8 @@ export class TypedLettersComponent implements OnChanges {
   @Input() letters: string;
   @Input() gameState: GameState;
 
-  gameStateEnum = GameState;
-  typedLettersArr: string[];
+  gameStateEnum: typeof GameState = GameState;
+  typedLettersArr: string[] = [];
 
   ngOnChanges(changes: SimpleChanges): void {
     this.typedLettersArr = new Array(9).fill(' ');
