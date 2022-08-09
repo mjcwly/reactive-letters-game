@@ -1,4 +1,4 @@
 export enum LetterType {
-  Consonant,
   Vowel,
+  Consonant,
 }
