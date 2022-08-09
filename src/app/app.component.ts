@@ -7,6 +7,7 @@ import { ChosenLettersService } from './services/chosen-letters.service';
 import { FoundWordService } from './services/found-words.service';
 import { GameStateService } from './services/game-state.service';
 import { GlobalStateService } from './services/global-state.service';
+import { RandomLetterService } from './services/random-letter.service';
 import { ScoreService } from './services/score.service';
 import { TimerService } from './services/timer.service';
 import { TypedLettersService } from './services/typed-letters.service';
@@ -56,6 +57,7 @@ export class AppComponent {
 
   constructor(
     private readonly chosenLettersService: ChosenLettersService,
+    private readonly randomLetterService: RandomLetterService,
     private readonly typedLettersService: TypedLettersService,
     private readonly timerService: TimerService,
     private readonly foundWordsService: FoundWordService,
@@ -66,7 +68,7 @@ export class AppComponent {
   ) {}
 
   letterTypeSelectedHandler(letterType: LetterType) {
-    this.chosenLettersService.setLetterType(letterType);
+    this.randomLetterService.setLetterType(letterType);
   }
 
   start() {
