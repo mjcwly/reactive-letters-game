@@ -1,4 +1,8 @@
-<div *ngIf="timeRemaining > 0" class="progress" style="height: 40px;">
+<div
+  *ngIf="timeRemaining > 0; else timeUp"
+  class="progress"
+  style="height: 40px;"
+>
   <div
     class="progress-bar progress-bar-striped progress-bar-animated"
     role="progressbar"
@@ -10,4 +14,6 @@
     {{ timeRemaining }}
   </div>
 </div>
-<div *ngIf="timeRemaining === 0" class="text-center display-6">Time Up!</div>
+<ng-template #timeUp>
+  <div class="text-center display-6">Time Up!</div>
+</ng-template>
