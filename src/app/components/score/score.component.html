@@ -1,0 +1,22 @@
+<table class="table table-bordered text-center">
+  <thead class="bg-primary text-light">
+    <tr>
+      <th colspan="9">Word Length</th>
+    </tr>
+    <tr>
+      <th
+        class="bg-primary text-light"
+        *ngFor="let scoreItem of score.scoreItems"
+      >
+        {{ scoreItem.wordLength }}
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="bg-light" *ngFor="let scoreItem of score.scoreItems">
+        {{ scoreItem.wordCount }}
+      </td>
+    </tr>
+  </tbody>
+</table>

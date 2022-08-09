@@ -1,0 +1,74 @@
+<div *ngIf="vm$ | async as vm" class="container p-2">
+  <h1 class="text-center display-5">Letters Game</h1>
+
+  <hr />
+
+  <button
+    *ngIf="!vm.gameActive"
+    class="btn btn-primary w-100"
+    (click)="start()"
+  >
+    Start Game
+  </button>
+
+  <button
+    *ngIf="vm.gameActive"
+    class="btn btn-secondary w-100"
+    (click)="reset()"
+  >
+    Reset
+  </button>
+
+  <hr />
+
+  <chosen-letters
+    [chosenLetterArray]="vm.chosenLetterArray"
+    [gameState]="vm.gameState"
+  ></chosen-letters>
+
+  <hr />
+
+  <div *ngIf="vm.gameActive">
+    <letter-selector
+      *ngIf="!vm.timerSettings.isTicking"
+      (letterTypeSelectedEvent)="letterTypeSelectedHandler($event)"
+    ></letter-selector>
+    <countdown-timer
+      *ngIf="vm.timerSettings.isTicking"
+      [timeRemaining]="vm.timerSettings.displayTime"
+      [initialTime]="vm.timerSettings.initialCountdownTime"
+    ></countdown-timer>
+    <hr />
+  </div>
+
+  <div *ngIf="vm.gameState === gameState.PlayingGame">
+    <typed-letters
+      [letters]="vm.typedLetters"
+      [gameState]="vm.gameState"
+    ></typed-letters>
+    <hr />
+  </div>
+
+  <div
+    *ngIf="
+      (vm.gameState === gameState.PlayingGame && vm.foundWords.length > 0) ||
+      vm.gameState === gameState.ViewScore
+    "
+  >
+    <found-words [words]="vm.foundWords"></found-words>
+    <hr />
+  </div>
+
+  <div
+    *ngIf="
+      vm.gameActive &&
+      vm.chosenLetters.length === 9 &&
+      vm.timerSettings.displayTime === 0
+    "
+  >
+    <score
+      *ngIf="vm.timerSettings.displayTime === 0"
+      [score]="vm.score"
+    ></score>
+  </div>
+</div>

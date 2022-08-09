@@ -1,0 +1,14 @@
+<div class="d-flex justify-content-center">
+  <div *ngFor="let letter of typedLettersArr">
+    <h1
+      class="typed-letter me-2 border-4 border-bottom fw-bold"
+      [ngClass]="
+        gameState === gameStateEnum.ViewScore
+          ? 'border-secondary text-secondary'
+          : 'border-primary text-primary'
+      "
+    >
+      {{ letter }}
+    </h1>
+  </div>
+</div>

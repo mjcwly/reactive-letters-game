@@ -1,0 +1,17 @@
+<div class="d-flex justify-content-between">
+  <div
+    class="letter-tile text-center alert border-2 m-0"
+    [ngClass]="
+      isOutOfFocus
+        ? 'alert-secondary border-secondary'
+        : chosenLetterObj?.isTypedLetter
+        ? 'alert-warning border-warning'
+        : 'alert-primary border-primary'
+    "
+    *ngFor="let chosenLetterObj of chosenLetterArray"
+  >
+    <p>
+      <span>{{ chosenLetterObj?.letter }}</span>
+    </p>
+  </div>
+</div>

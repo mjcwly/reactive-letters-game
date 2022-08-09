@@ -1,0 +1,13 @@
+<div *ngIf="timeRemaining > 0" class="progress" style="height: 40px;">
+  <div
+    class="progress-bar progress-bar-striped progress-bar-animated"
+    role="progressbar"
+    [ngStyle]="{ 'width.%': percentage }"
+    [attr.aria-valuenow]="percentage"
+    aria-valuemin="0"
+    aria-valuemax="100"
+  >
+    {{ timeRemaining }}
+  </div>
+</div>
+<div *ngIf="timeRemaining === 0" class="text-center display-6">Time Up!</div>
