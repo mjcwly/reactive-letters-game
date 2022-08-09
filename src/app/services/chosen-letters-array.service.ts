@@ -6,9 +6,8 @@ import {
   QuestionMark,
 } from '../models/chosen-letter.model';
 import { GameState } from '../models/game-state.enum';
-import { ChosenLettersService } from './chosen-letters.service';
 import { GameStateService } from './game-state.service';
-import { TypedLettersService } from './typed-letters.service';
+import { GlobalStateService } from './global-state.service';
 
 @Injectable({
   providedIn: 'root',
@@ -16,25 +15,22 @@ import { TypedLettersService } from './typed-letters.service';
 export class ChosenLettersArrayService {
   private fillChar$: Observable<ChosenLetter> =
     this.gameStateService.gameState$.pipe(
-      map((gameState) =>
+      map((gameState: GameState) =>
         gameState === GameState.LetterSelection ? QuestionMark : Blank
       )
     );
 
-  chosenLetterArray$ = combineLatest([
-    this.chosenLettersService.displayChosenLetters$,
+  chosenLetterArray$: Observable<ChosenLetter[]> = combineLatest([
+    this.globalStateService.chosenLetters$,
+    this.globalStateService.typedLetters$,
     this.fillChar$,
-    this.typedLettersService.displayTypedLetters$,
   ]).pipe(
-    map(([chosenLetters, fillChar, typedLetters]) => {
+    map(([chosenLetters, typedLetters, fillChar]) => {
       const chosenLettersArr = [...chosenLetters];
       const prefilledChosenLettersArr = new Array(9).fill(fillChar);
       const chosenLetterArr: ChosenLetter[] = chosenLettersArr.reduce(
         (acc, cur, index) => {
-          acc[index] = {
-            letter: cur,
-            isTypedLetter: false,
-          };
+          acc[index] = { letter: cur, isTypedLetter: false };
           return acc;
         },
         prefilledChosenLettersArr
@@ -42,7 +38,7 @@ export class ChosenLettersArrayService {
 
       const typedLettersArr = [...typedLetters];
       const chosenLetterArr2: ChosenLetter[] = typedLettersArr.reduce(
-        (acc, cur, index) => {
+        (acc, cur) => {
           const foundChosenLetterObj = acc.find(
             (chosenLetterObj) =>
               chosenLetterObj.letter === cur && !chosenLetterObj.isTypedLetter
@@ -63,7 +59,6 @@ export class ChosenLettersArrayService {
 
   constructor(
     private readonly gameStateService: GameStateService,
-    private readonly chosenLettersService: ChosenLettersService,
-    private readonly typedLettersService: TypedLettersService
+    private readonly globalStateService: GlobalStateService
   ) {}
 }
