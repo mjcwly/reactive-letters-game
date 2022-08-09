@@ -68,7 +68,7 @@ export class AppComponent {
   ) {}
 
   letterTypeSelectedHandler(letterType: LetterType) {
-    this.randomLetterService.setLetterType(letterType);
+    this.randomLetterService.setRandomLetterType(letterType);
   }
 
   start() {
