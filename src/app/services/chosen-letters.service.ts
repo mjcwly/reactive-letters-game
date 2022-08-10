@@ -9,7 +9,6 @@ import {
   tap,
   withLatestFrom,
 } from 'rxjs';
-import { LetterType } from '../models/letter-type';
 import { GlobalStateService } from './global-state.service';
 import { RandomLetterService } from './random-letter.service';
 
