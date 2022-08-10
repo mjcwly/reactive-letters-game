@@ -6,19 +6,15 @@ import { LetterType } from '../models/letter-type';
   providedIn: 'root',
 })
 export class RandomLetterService {
-  private vowels = 'AAAAAAAAAEEEEEEEEEEEEIIIIIIIIIOOOOOOOOUUUU';
-  private vowels$ = of(this.vowels);
-
-  private consonants =
-    'BBCCDDDDFFGGGHHJKLLLLMMNNNNNNPPQRRRRRRSSSSTTTTTTVVWWXYYZ';
-  private consonants$ = of(this.consonants);
-
   private randomLetterType$ = new Subject<LetterType>();
 
   private letterSet$: Observable<string> = this.randomLetterType$.pipe(
-    switchMap((letterType) =>
-      letterType === LetterType.Vowel ? this.vowels$ : this.consonants$
-    )
+    map((randomLetterType: LetterType) => {
+      const vowels: string = 'AAAAAAAAAEEEEEEEEEEEEIIIIIIIIIOOOOOOOOUUUU';
+      const consonants: string =
+        'BBCCDDDDFFGGGHHJKLLLLMMNNNNNNPPQRRRRRRSSSSTTTTTTVVWWXYYZ';
+      return randomLetterType === LetterType.Vowel ? vowels : consonants;
+    })
   );
 
   randomLetter$ = this.letterSet$.pipe(
