@@ -1,20 +1,22 @@
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
+import { FoundWord } from '../models/found-word.model';
 import { ScoreItem, ScoreModel } from '../models/score';
-import { GlobalStateService } from './global-state.service';
+import { FoundWordArrayService } from './found-word-array.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ScoreService {
   private scoreItems$: Observable<ScoreItem[]> =
-    this.globalStateService.foundWords$.pipe(
-      map((foundWords) => {
+    this.foundWordArrayService.foundWordArray$.pipe(
+      map((foundWordArray: FoundWord[]) => {
         const wordLengths = [3, 4, 5, 6, 7, 8, 9];
         const mappedTotals = wordLengths.reduce(
           (accScoreItems, curWordLength) => {
-            const countOfFoundWords = foundWords.filter(
-              (word) => word.length === curWordLength
+            const countOfFoundWords = foundWordArray.filter(
+              (foundWord: FoundWord) =>
+                foundWord.word.length === curWordLength && foundWord.isValidWord
             ).length;
 
             const scoreItem: ScoreItem = {
@@ -39,5 +41,5 @@ export class ScoreService {
     })
   );
 
-  constructor(private readonly globalStateService: GlobalStateService) {}
+  constructor(private readonly foundWordArrayService: FoundWordArrayService) {}
 }
