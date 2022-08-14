@@ -9,9 +9,10 @@ import { FoundWordsComponent } from './components/found-words/found-words.compon
 import { TypedLettersComponent } from './components/typed-letters/typed-letters.component';
 import { ChosenLettersComponent } from './components/chosen-letters/chosen-letters.component';
 import { ScoreComponent } from './components/score/score.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
-  imports: [BrowserModule, FormsModule],
+  imports: [BrowserModule, FormsModule, HttpClientModule],
   declarations: [
     AppComponent,
     LetterSelectorComponent,

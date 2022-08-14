@@ -1,4 +1,5 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { FoundWord } from '../../models/found-word.model';
 
 @Component({
   selector: 'found-words',
@@ -6,5 +7,5 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
   styleUrls: ['./found-words.component.css'],
 })
 export class FoundWordsComponent {
-  @Input() words: string[];
+  @Input() foundWordArray: FoundWord[];
 }

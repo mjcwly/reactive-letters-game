@@ -1,13 +1,14 @@
 <div
-  *ngIf="words.length; else noWordsFound"
+  *ngIf="foundWordArray.length; else noWordsFound"
   class="d-flex flex-wrap justify-content-center"
 >
   <div
-    class="badge bg-primary m-1"
+    class="badge m-1"
+    [ngClass]="foundWord.isValidWord ? 'bg-primary' : 'bg-danger'"
     style="width: 130px;"
-    *ngFor="let word of words"
+    *ngFor="let foundWord of foundWordArray"
   >
-    {{ word }}
+    {{ foundWord.word }}
   </div>
 </div>
 <ng-template #noWordsFound>
