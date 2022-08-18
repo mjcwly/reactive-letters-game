@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
   catchError,
@@ -7,6 +8,7 @@ import {
   Observable,
   of,
   switchMap,
+  shareReplay,
 } from 'rxjs';
 import { FoundWord } from '../models/found-word.model';
 import {
@@ -38,14 +40,15 @@ export class FoundWordArrayService {
             .getWordDefinition(foundWord.word)
             .pipe(
               map((response: WordDefinitionResponse) => {
-                console.log('response', response);
                 return {
                   ...foundWord,
                   isValidWord: true,
                 };
               }),
               catchError((err: WordDefinitionNotFoundResponse) => {
-                console.log('err response', err);
+                // Handle expected 404 error response from the api call
+                // by returning a FoundWord object with isValidWord flag
+                // set to false.
                 return of({
                   ...foundWord,
                   isValidWord: false,
@@ -60,7 +63,7 @@ export class FoundWordArrayService {
   foundWordArray$ = merge(
     this.foundWordArrayDefaults$,
     this.foundWordArrayUpdated$
-  );
+  ).pipe(shareReplay());
 
   constructor(
     private readonly globalStateService: GlobalStateService,
