@@ -1,4 +1,3 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
   catchError,
@@ -8,6 +7,7 @@ import {
   Observable,
   of,
   switchMap,
+  tap,
   shareReplay,
 } from 'rxjs';
 import { FoundWord } from '../models/found-word.model';
@@ -60,10 +60,15 @@ export class FoundWordArrayService {
       })
     );
 
-  foundWordArray$ = merge(
+  foundWordArray$: Observable<FoundWord[]> = merge(
     this.foundWordArrayDefaults$,
     this.foundWordArrayUpdated$
-  ).pipe(shareReplay());
+  ).pipe(
+    tap((foundWordArray: FoundWord[]) => {
+      this.globalStateService.setFoundWordArray(foundWordArray);
+    }),
+    shareReplay()
+  );
 
   constructor(
     private readonly globalStateService: GlobalStateService,
