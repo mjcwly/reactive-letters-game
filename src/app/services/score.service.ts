@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { FoundWord } from '../models/found-word.model';
 import { ScoreItem, ScoreModel } from '../models/score';
-import { FoundWordArrayService } from './found-word-array.service';
+import { GlobalStateService } from './global-state.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ScoreService {
   private scoreItems$: Observable<ScoreItem[]> =
-    this.foundWordArrayService.foundWordArray$.pipe(
+    this.globalStateService.foundWordArray$.pipe(
       map((foundWordArray: FoundWord[]) => {
         const wordLengths = [3, 4, 5, 6, 7, 8, 9];
         const mappedTotals = wordLengths.reduce(
@@ -41,5 +41,5 @@ export class ScoreService {
     })
   );
 
-  constructor(private readonly foundWordArrayService: FoundWordArrayService) {}
+  constructor(private readonly globalStateService: GlobalStateService) {}
 }
