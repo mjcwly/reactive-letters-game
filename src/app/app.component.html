@@ -51,7 +51,8 @@
 
   <div
     *ngIf="
-      (vm.gameState === gameState.PlayingGame && vm.foundWords.length > 0) ||
+      (vm.gameState === gameState.PlayingGame &&
+        vm.foundWordArray.length > 0) ||
       vm.gameState === gameState.ViewScore
     "
   >

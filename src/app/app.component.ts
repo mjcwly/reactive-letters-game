@@ -4,7 +4,6 @@ import { GameState } from './models/game-state.enum';
 import { LetterType } from './models/letter-type';
 import { ChosenLettersArrayService } from './services/chosen-letters-array.service';
 import { ChosenLettersService } from './services/chosen-letters.service';
-import { FoundWordArrayService } from './services/found-word-array.service';
 import { FoundWordService } from './services/found-words.service';
 import { GameStateService } from './services/game-state.service';
 import { GlobalStateService } from './services/global-state.service';
@@ -27,10 +26,9 @@ export class AppComponent {
     this.chosenLettersService.displayChosenLetters$,
     this.timerService.timerSettings$,
     this.typedLettersService.displayTypedLetters$,
-    this.foundWordsService.displayFoundWords$,
+    this.foundWordsService.displayFoundWordArray$,
     this.chosenLettersArrayService.chosenLetterArray$,
     this.scoreService.displayScore$,
-    this.foundWordArrayService.foundWordArray$,
   ]).pipe(
     map(
       ([
@@ -39,10 +37,9 @@ export class AppComponent {
         chosenLetters,
         timerSettings,
         typedLetters,
-        foundWords,
+        foundWordArray,
         chosenLetterArray,
         score,
-        foundWordArray,
       ]) => {
         return {
           gameState,
@@ -50,10 +47,9 @@ export class AppComponent {
           chosenLetters,
           timerSettings,
           typedLetters,
-          foundWords,
+          foundWordArray,
           chosenLetterArray,
           score,
-          foundWordArray,
         };
       }
     )
@@ -68,8 +64,7 @@ export class AppComponent {
     private readonly scoreService: ScoreService,
     private readonly globalStateService: GlobalStateService,
     private readonly gameStateService: GameStateService,
-    private readonly chosenLettersArrayService: ChosenLettersArrayService,
-    private readonly foundWordArrayService: FoundWordArrayService
+    private readonly chosenLettersArrayService: ChosenLettersArrayService
   ) {}
 
   letterTypeSelectedHandler(letterType: LetterType) {

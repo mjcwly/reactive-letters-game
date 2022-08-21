@@ -57,7 +57,7 @@ export class TypedLettersService {
   private resetTypedLetters$ = merge(
     this.resetTypedLettersSubject$,
     this.keyPressService.escKeyPress$,
-    this.globalStateService.foundWords$
+    this.globalStateService.foundWordArray$
   ).pipe(map(() => ''));
 
   displayTypedLetters$ = merge(
