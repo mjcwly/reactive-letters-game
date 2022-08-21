@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { map, merge, Observable, of, Subject, switchMap } from 'rxjs';
-import { catchError, tap, withLatestFrom } from 'rxjs/operators';
+import { catchError, filter, tap, withLatestFrom } from 'rxjs/operators';
 import { FoundWord } from '../models/found-word.model';
 import { WordDefinitionNotFoundResponse } from '../models/word-definition.model';
 import { DictionaryApiService } from './dictionary-api.service';
@@ -20,6 +20,7 @@ export class FoundWordService {
   private newFoundWord$: Observable<FoundWord> =
     this.keyPressService.enterKeyPress$.pipe(
       withLatestFrom(this.globalStateService.typedLetters$),
+      filter(([_, typedLetters]) => !!typedLetters),
       switchMap(([_, typedLetters]) =>
         this.dictionaryApiService.getWordDefinition(typedLetters).pipe(
           map(() => {
