@@ -14,7 +14,14 @@
   </thead>
   <tbody>
     <tr>
-      <td class="bg-light" *ngFor="let scoreItem of score.scoreItems">
+      <td
+        [ngClass]="
+          scoreItem.wordLength === score.longestWordLength
+            ? 'bg-primary text-light'
+            : 'bg-light text-dark'
+        "
+        *ngFor="let scoreItem of score.scoreItems"
+      >
         {{ scoreItem.wordCount }}
       </td>
     </tr>

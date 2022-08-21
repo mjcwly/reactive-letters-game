@@ -1,5 +1,6 @@
 export interface ScoreModel {
   scoreItems: ScoreItem[];
+  longestWordLength: number;
 }
 
 export interface ScoreItem {

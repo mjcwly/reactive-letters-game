@@ -37,7 +37,16 @@ export class ScoreService {
 
   displayScore$: Observable<ScoreModel> = this.scoreItems$.pipe(
     map((scoreItems) => {
-      return { scoreItems };
+      const longestWordLength = scoreItems.reduce((acc, cur) => {
+        return cur.wordCount > 0 && cur.wordLength > acc ? cur.wordLength : acc;
+      }, 0);
+
+      const scoreModel: ScoreModel = {
+        scoreItems,
+        longestWordLength,
+      };
+
+      return scoreModel;
     })
   );
 
