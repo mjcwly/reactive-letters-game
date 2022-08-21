@@ -4,7 +4,7 @@ import { GameState } from './models/game-state.enum';
 import { LetterType } from './models/letter-type';
 import { ChosenLettersArrayService } from './services/chosen-letters-array.service';
 import { ChosenLettersService } from './services/chosen-letters.service';
-import { FoundWordService } from './services/found-words.service';
+import { FoundWordService } from './services/found-word.service';
 import { GameStateService } from './services/game-state.service';
 import { GlobalStateService } from './services/global-state.service';
 import { RandomLetterService } from './services/random-letter.service';

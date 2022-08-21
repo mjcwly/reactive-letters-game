@@ -11,11 +11,11 @@ import { KeyPressService } from './key-press.service';
   providedIn: 'root',
 })
 export class FoundWordService {
-  private initialFoundWords$: Observable<FoundWord[]> = of([]);
+  private initialFoundWordArray$: Observable<FoundWord[]> = of([]);
 
-  private resetFoundWordsSubject$ = new Subject<void>();
-  private resetFoundWords$: Observable<FoundWord[]> =
-    this.resetFoundWordsSubject$.pipe(map(() => []));
+  private resetFoundWordArraySubject$ = new Subject<void>();
+  private resetFoundWordArray$: Observable<FoundWord[]> =
+    this.resetFoundWordArraySubject$.pipe(map(() => []));
 
   private newFoundWord$: Observable<FoundWord> =
     this.keyPressService.enterKeyPress$.pipe(
@@ -43,7 +43,7 @@ export class FoundWordService {
       )
     );
 
-  private accumulatedFoundWords$: Observable<FoundWord[]> =
+  private accumulatedFoundWordArray$: Observable<FoundWord[]> =
     this.newFoundWord$.pipe(
       withLatestFrom(this.globalStateService.foundWordArray$),
       map(([newWord, enteredWords]) => {
@@ -53,9 +53,9 @@ export class FoundWordService {
     );
 
   displayFoundWordArray$: Observable<FoundWord[]> = merge(
-    this.initialFoundWords$,
-    this.accumulatedFoundWords$,
-    this.resetFoundWords$
+    this.initialFoundWordArray$,
+    this.accumulatedFoundWordArray$,
+    this.resetFoundWordArray$
   ).pipe(
     tap((foundWordArray: FoundWord[]) => {
       this.globalStateService.setFoundWordArray(foundWordArray);
@@ -69,6 +69,6 @@ export class FoundWordService {
   ) {}
 
   reset() {
-    this.resetFoundWordsSubject$.next();
+    this.resetFoundWordArraySubject$.next();
   }
 }
