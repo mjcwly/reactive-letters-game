@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 import { combineLatest, map } from 'rxjs';
 import { GameState } from './models/game-state.enum';
 import { LetterType } from './models/letter-type';

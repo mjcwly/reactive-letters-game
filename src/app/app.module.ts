@@ -10,9 +10,20 @@ import { TypedLettersComponent } from './components/typed-letters/typed-letters.
 import { ChosenLettersComponent } from './components/chosen-letters/chosen-letters.component';
 import { ScoreComponent } from './components/score/score.component';
 import { HttpClientModule } from '@angular/common/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
-  imports: [BrowserModule, FormsModule, HttpClientModule],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    HttpClientModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot({
+      timeOut: 2000,
+      positionClass: 'toast-bottom-right',
+    }),
+  ],
   declarations: [
     AppComponent,
     LetterSelectorComponent,

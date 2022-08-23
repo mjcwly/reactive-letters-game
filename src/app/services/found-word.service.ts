@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 import { map, merge, Observable, of, Subject, switchMap } from 'rxjs';
 import { catchError, filter, tap, withLatestFrom } from 'rxjs/operators';
 import { FoundWord } from '../models/found-word.model';
@@ -24,6 +25,11 @@ export class FoundWordService {
       switchMap(([_, typedLetters]) =>
         this.dictionaryApiService.getWordDefinition(typedLetters).pipe(
           map(() => {
+            this.toastr.success(
+              typedLetters,
+              `${typedLetters.length} Letter Word Found!`
+            );
+
             const newFoundWord: FoundWord = {
               word: typedLetters,
               isValidWord: true,
@@ -34,6 +40,9 @@ export class FoundWordService {
             // Handle expected 404 error response from the api call
             // by returning a FoundWord object with isValidWord flag
             // set to false.
+
+            this.toastr.error(typedLetters, 'Word Not Found!');
+
             const newFoundWord: FoundWord = {
               word: typedLetters,
               isValidWord: false,
@@ -66,7 +75,8 @@ export class FoundWordService {
   constructor(
     private readonly keyPressService: KeyPressService,
     private readonly globalStateService: GlobalStateService,
-    private readonly dictionaryApiService: DictionaryApiService
+    private readonly dictionaryApiService: DictionaryApiService,
+    private readonly toastr: ToastrService
   ) {}
 
   reset() {
