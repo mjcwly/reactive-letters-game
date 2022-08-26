@@ -14,18 +14,7 @@ export class TypedLettersService {
     map((e: KeyboardEvent) => String.fromCharCode(e.keyCode))
   );
 
-  private backspaceKeyPress$ = this.keyPressService.backspaceKeyPress$.pipe(
-    withLatestFrom(this.globalStateService.typedLetters$),
-    map(([, typedLetters]) => {
-      const accumulatedLetters = typedLetters.substring(
-        0,
-        typedLetters.length - 1
-      );
-      return accumulatedLetters;
-    })
-  );
-
-  private accumulatedTypedLetters$ = this.typedLetter$.pipe(
+  private pushedTypedLetters$ = this.typedLetter$.pipe(
     withLatestFrom(
       this.globalStateService.typedLetters$,
       this.globalStateService.chosenLetters$
@@ -52,6 +41,17 @@ export class TypedLettersService {
     })
   );
 
+  private poppedTypedLetters$ = this.keyPressService.backspaceKeyPress$.pipe(
+    withLatestFrom(this.globalStateService.typedLetters$),
+    map(([, typedLetters]) => {
+      const accumulatedLetters = typedLetters.substring(
+        0,
+        typedLetters.length - 1
+      );
+      return accumulatedLetters;
+    })
+  );
+
   private resetTypedLettersSubject$ = new Subject<void>();
 
   private resetTypedLetters$ = merge(
@@ -62,9 +62,9 @@ export class TypedLettersService {
 
   displayTypedLetters$ = merge(
     this.initialTypedLetters,
-    this.accumulatedTypedLetters$,
-    this.resetTypedLetters$,
-    this.backspaceKeyPress$
+    this.pushedTypedLetters$,
+    this.poppedTypedLetters$,
+    this.resetTypedLetters$
   ).pipe(
     shareReplay(),
     tap((typedLetters) => {
