@@ -13,6 +13,7 @@ import {
   withLatestFrom,
 } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { Constants } from '../helpers/constants';
 import { GlobalStateService } from './global-state.service';
 
 @Injectable({
@@ -28,7 +29,7 @@ export class TimerService {
 
   private isTicking$ = this.globalStateService.chosenLetters$.pipe(
     map((selectedLetters) => {
-      const isTicking = selectedLetters.length === 9;
+      const isTicking = selectedLetters.length === Constants.MAX_LETTERS;
       isTicking ? this.startTimerSubject$.next() : this.stopTimerSubjec$.next();
       return isTicking;
     })

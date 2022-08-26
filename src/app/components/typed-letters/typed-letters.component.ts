@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Constants } from '../../helpers/constants';
 import { GameState } from '../../models/game-state.enum';
 
 @Component({
@@ -14,7 +15,7 @@ export class TypedLettersComponent implements OnChanges {
   typedLettersArr: string[] = [];
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.typedLettersArr = new Array(9).fill(' ');
+    this.typedLettersArr = new Array(Constants.MAX_LETTERS).fill(' ');
     this.letters.split('').forEach((letter, index) => {
       this.typedLettersArr[index] = letter;
     });

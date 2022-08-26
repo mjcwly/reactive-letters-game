@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { catchError, combineLatest, EMPTY, map, Observable } from 'rxjs';
+import { Constants } from '../helpers/constants';
 import {
   Blank,
   ChosenLetter,
@@ -27,7 +28,9 @@ export class ChosenLettersArrayService {
   ]).pipe(
     map(([chosenLetters, typedLetters, fillChar]) => {
       const chosenLettersArr = [...chosenLetters];
-      const prefilledChosenLettersArr = new Array(9).fill(fillChar);
+      const prefilledChosenLettersArr = new Array(Constants.MAX_LETTERS).fill(
+        fillChar
+      );
       const chosenLetterArr: ChosenLetter[] = chosenLettersArr.reduce(
         (acc, cur, index) => {
           acc[index] = { letter: cur, isTypedLetter: false };

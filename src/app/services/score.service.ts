@@ -3,6 +3,7 @@ import { map, Observable } from 'rxjs';
 import { FoundWord } from '../models/found-word.model';
 import { ScoreItem, ScoreModel } from '../models/score';
 import { GlobalStateService } from './global-state.service';
+import { Constants } from '../helpers/constants';
 
 @Injectable({
   providedIn: 'root',
@@ -11,8 +12,14 @@ export class ScoreService {
   private scoreItems$: Observable<ScoreItem[]> =
     this.globalStateService.foundWordArray$.pipe(
       map((foundWordArray: FoundWord[]) => {
-        const wordLengths = [3, 4, 5, 6, 7, 8, 9];
-        const mappedTotals = wordLengths.reduce(
+        // Output: [3,4,5,6,7,8,9]
+        // when MIN_LETTERS = 3, MAX_LETTERS = 9
+        const wordLengthsArray: number[] = Array.from(
+          { length: Constants.MAX_LETTERS },
+          (_, i) => i + 1
+        ).filter((i) => i >= Constants.MIN_LETTERS);
+
+        const mappedTotals = wordLengthsArray.reduce(
           (accScoreItems, curWordLength) => {
             const countOfFoundWords = foundWordArray.filter(
               (foundWord: FoundWord) =>

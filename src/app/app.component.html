@@ -61,11 +61,7 @@
   </div>
 
   <div
-    *ngIf="
-      vm.gameActive &&
-      vm.chosenLetters.length === 9 &&
-      vm.timerSettings.displayTime === 0
-    "
+    *ngIf="vm.gameState === gameState.ViewScore"
   >
     <score
       *ngIf="vm.timerSettings.displayTime === 0"

@@ -9,6 +9,7 @@ import {
   tap,
   withLatestFrom,
 } from 'rxjs';
+import { Constants } from '../helpers/constants';
 import { GlobalStateService } from './global-state.service';
 import { RandomLetterService } from './random-letter.service';
 
@@ -23,7 +24,10 @@ export class ChosenLettersService {
   private accumulatedChosenLetters$ =
     this.randomLetterService.randomLetter$.pipe(
       withLatestFrom(this.globalStateService.chosenLetters$),
-      filter(([, chosenLettersCache]) => chosenLettersCache.length < 9),
+      filter(
+        ([, chosenLettersCache]) =>
+          chosenLettersCache.length < Constants.MAX_LETTERS
+      ),
       map(([randomLetter, chosenLettersCache]) => {
         const accumulatedLetters = chosenLettersCache + randomLetter;
         return accumulatedLetters;
