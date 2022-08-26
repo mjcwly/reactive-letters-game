@@ -20,9 +20,7 @@ import { GlobalStateService } from './global-state.service';
   providedIn: 'root',
 })
 export class TimerService {
-  private readonly SECONDS = 30;
-
-  private initialCountdownTime$ = of(this.SECONDS);
+  private initialCountdownTime$ = of(Constants.SECONDS);
 
   private startTimerSubject$ = new Subject<void>();
   private stopTimerSubjec$ = new Subject<void>();
@@ -76,6 +74,6 @@ export class TimerService {
   constructor(private readonly globalStateService: GlobalStateService) {}
 
   reset() {
-    this.resetCountdownTimeSubject$.next(this.SECONDS);
+    this.resetCountdownTimeSubject$.next(Constants.SECONDS);
   }
 }
