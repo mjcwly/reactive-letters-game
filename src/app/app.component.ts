@@ -24,7 +24,7 @@ export class AppComponent {
   vm$ = combineLatest([
     this.gameStateService.gameState$,
     this.globalStateService.gameActive$,
-    this.chosenLettersService.displayChosenLetters$,
+    this.chosenLettersService.chosenLetters$,
     this.timerService.timerSettings$,
     this.typedLettersService.displayTypedLetters$,
     this.foundWordsService.displayFoundWordArray$,

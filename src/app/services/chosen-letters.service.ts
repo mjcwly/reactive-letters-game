@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import {
-  BehaviorSubject,
   filter,
   map,
   merge,
+  Observable,
+  of,
   shareReplay,
   Subject,
   tap,
@@ -17,9 +18,11 @@ import { RandomLetterService } from './random-letter.service';
   providedIn: 'root',
 })
 export class ChosenLettersService {
-  private initialChosenLetters = new BehaviorSubject<string>('');
+  private initialChosenLetters: Observable<string> = of('');
 
-  private resetChosenLettersSubject$ = new Subject<string>();
+  private resetChosenLettersSubject$ = new Subject<void>();
+  private resetChosenLetters$: Observable<string> =
+    this.resetChosenLettersSubject$.pipe(map(() => ''));
 
   private accumulatedChosenLetters$ =
     this.randomLetterService.randomLetter$.pipe(
@@ -34,15 +37,15 @@ export class ChosenLettersService {
       })
     );
 
-  displayChosenLetters$ = merge(
+  chosenLetters$ = merge(
     this.initialChosenLetters,
     this.accumulatedChosenLetters$,
-    this.resetChosenLettersSubject$
+    this.resetChosenLetters$
   ).pipe(
-    shareReplay(),
     tap((displayLetters) => {
       this.globalStateService.setChosenLetters(displayLetters);
-    })
+    }),
+    shareReplay()
   );
 
   constructor(
@@ -51,6 +54,6 @@ export class ChosenLettersService {
   ) {}
 
   reset() {
-    this.resetChosenLettersSubject$.next('');
+    this.resetChosenLettersSubject$.next();
   }
 }
