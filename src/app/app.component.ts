@@ -27,7 +27,7 @@ export class AppComponent {
     this.typedLettersService.typedLetters$,
     this.foundWordsService.foundWordArray$,
     this.chosenLettersArrayService.chosenLetterArray$,
-    this.scoreService.displayScore$,
+    this.scoreService.scoreModel$,
   ]).pipe(
     map(
       ([
