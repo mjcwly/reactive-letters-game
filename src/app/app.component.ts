@@ -72,11 +72,11 @@ export class AppComponent {
     this.randomLetterService.setRandomLetterType(letterType);
   }
 
-  start() {
+  onStartButtonClicked() {
     this.globalStateService.startGame();
   }
 
-  reset() {
+  onResetButtonClicked() {
     this.typedLettersService.reset();
     this.chosenLettersService.reset();
     this.timerService.reset();
