@@ -5,18 +5,14 @@ import { BehaviorSubject, Subject } from 'rxjs';
   providedIn: 'root',
 })
 export class GlobalStateService {
-  private newWordAttemptedSubject$ = new Subject<void>();
-  newWordAttempted$ = this.newWordAttemptedSubject$.asObservable();
-
   private gameActiveSubject$ = new BehaviorSubject<boolean>(false);
   gameActive$ = this.gameActiveSubject$.asObservable();
 
-  startGame() {
-    this.gameActiveSubject$.next(true);
-  }
+  private newWordAttemptedSubject$ = new Subject<void>();
+  newWordAttempted$ = this.newWordAttemptedSubject$.asObservable();
 
-  endGame() {
-    this.gameActiveSubject$.next(false);
+  setGameActive(isActive: boolean) {
+    this.gameActiveSubject$.next(isActive);
   }
 
   newWordAttempted() {

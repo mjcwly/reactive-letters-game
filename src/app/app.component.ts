@@ -69,7 +69,7 @@ export class AppComponent {
   }
 
   onStartButtonClicked() {
-    this.globalStateService.startGame();
+    this.globalStateService.setGameActive(true);
   }
 
   onResetButtonClicked() {
@@ -77,6 +77,6 @@ export class AppComponent {
     this.chosenLettersService.reset();
     this.timerService.reset();
     this.foundWordsService.reset();
-    this.globalStateService.endGame();
+    this.globalStateService.setGameActive(false);
   }
 }
