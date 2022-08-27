@@ -24,7 +24,7 @@ export class AppComponent {
     this.gameStateService.gameState$,
     this.globalStateService.gameActive$,
     this.timerService.timerSettings$,
-    this.typedLettersService.displayTypedLetters$,
+    this.typedLettersService.typedLetters$,
     this.foundWordsService.displayFoundWordArray$,
     this.chosenLettersArrayService.chosenLetterArray$,
     this.scoreService.displayScore$,

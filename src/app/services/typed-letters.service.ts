@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { map, merge, of, Subject } from 'rxjs';
+import { BehaviorSubject, map, merge, of, Subject } from 'rxjs';
 import { filter, shareReplay, tap, withLatestFrom } from 'rxjs/operators';
+import { ChosenLettersService } from './chosen-letters.service';
 import { GlobalStateService } from './global-state.service';
 import { KeyPressService } from './key-press.service';
 
@@ -8,6 +9,9 @@ import { KeyPressService } from './key-press.service';
   providedIn: 'root',
 })
 export class TypedLettersService {
+  private typedLettersCacheSubject$ = new BehaviorSubject<string>('');
+  private typedLettersCache$ = this.typedLettersCacheSubject$.asObservable();
+
   private initialTypedLetters = of('');
 
   private typedLetter$ = this.keyPressService.anyLetterPress$.pipe(
@@ -16,8 +20,8 @@ export class TypedLettersService {
 
   private pushedTypedLetters$ = this.typedLetter$.pipe(
     withLatestFrom(
-      this.globalStateService.typedLetters$,
-      this.globalStateService.chosenLetters$
+      this.typedLettersCache$,
+      this.chosenLettersService.chosenLetters$
     ),
     filter(([typedLetter, typedLetters, chosenLetters]) => {
       const typedLettersArr = [...typedLetters];
@@ -42,7 +46,7 @@ export class TypedLettersService {
   );
 
   private poppedTypedLetters$ = this.keyPressService.backspaceKeyPress$.pipe(
-    withLatestFrom(this.globalStateService.typedLetters$),
+    withLatestFrom(this.typedLettersCache$),
     map(([, typedLetters]) => {
       const accumulatedLetters = typedLetters.substring(
         0,
@@ -60,7 +64,7 @@ export class TypedLettersService {
     this.globalStateService.foundWordArray$
   ).pipe(map(() => ''));
 
-  displayTypedLetters$ = merge(
+  typedLetters$ = merge(
     this.initialTypedLetters,
     this.pushedTypedLetters$,
     this.poppedTypedLetters$,
@@ -68,13 +72,14 @@ export class TypedLettersService {
   ).pipe(
     shareReplay(),
     tap((typedLetters) => {
-      this.globalStateService.setTypedLetters(typedLetters);
+      this.typedLettersCacheSubject$.next(typedLetters);
     })
   );
 
   constructor(
     private readonly keyPressService: KeyPressService,
-    private readonly globalStateService: GlobalStateService
+    private readonly globalStateService: GlobalStateService,
+    private readonly chosenLettersService: ChosenLettersService
   ) {}
 
   reset() {

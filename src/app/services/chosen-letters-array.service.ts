@@ -9,7 +9,7 @@ import {
 import { GameState } from '../models/game-state.enum';
 import { ChosenLettersService } from './chosen-letters.service';
 import { GameStateService } from './game-state.service';
-import { GlobalStateService } from './global-state.service';
+import { TypedLettersService } from './typed-letters.service';
 
 @Injectable({
   providedIn: 'root',
@@ -24,7 +24,7 @@ export class ChosenLettersArrayService {
 
   chosenLetterArray$: Observable<ChosenLetter[]> = combineLatest([
     this.chosenLettersService.chosenLetters$,
-    this.globalStateService.typedLetters$,
+    this.typedLettersService.typedLetters$,
     this.fillChar$,
   ]).pipe(
     map(([chosenLetters, typedLetters, fillChar]) => {
@@ -64,6 +64,6 @@ export class ChosenLettersArrayService {
   constructor(
     private readonly gameStateService: GameStateService,
     private readonly chosenLettersService: ChosenLettersService,
-    private readonly globalStateService: GlobalStateService
+    private readonly typedLettersService: TypedLettersService
   ) {}
 }

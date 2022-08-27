@@ -7,6 +7,7 @@ import { WordDefinitionNotFoundResponse } from '../models/word-definition.model'
 import { DictionaryApiService } from './dictionary-api.service';
 import { GlobalStateService } from './global-state.service';
 import { KeyPressService } from './key-press.service';
+import { TypedLettersService } from './typed-letters.service';
 
 @Injectable({
   providedIn: 'root',
@@ -20,7 +21,7 @@ export class FoundWordService {
 
   private newFoundWord$: Observable<FoundWord> =
     this.keyPressService.enterKeyPress$.pipe(
-      withLatestFrom(this.globalStateService.typedLetters$),
+      withLatestFrom(this.typedLettersService.typedLetters$),
       filter(([_, typedLetters]) => !!typedLetters),
       switchMap(([_, typedLetters]) =>
         this.dictionaryApiService.getWordDefinition(typedLetters).pipe(
@@ -76,6 +77,7 @@ export class FoundWordService {
     private readonly keyPressService: KeyPressService,
     private readonly globalStateService: GlobalStateService,
     private readonly dictionaryApiService: DictionaryApiService,
+    private readonly typedLettersService: TypedLettersService,
     private readonly toastr: ToastrService
   ) {}
 

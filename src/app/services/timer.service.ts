@@ -14,6 +14,7 @@ import {
 } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Constants } from '../helpers/constants';
+import { ChosenLettersService } from './chosen-letters.service';
 import { GlobalStateService } from './global-state.service';
 
 @Injectable({
@@ -25,7 +26,7 @@ export class TimerService {
   private startTimerSubject$ = new Subject<void>();
   private stopTimerSubjec$ = new Subject<void>();
 
-  private isTicking$ = this.globalStateService.chosenLetters$.pipe(
+  private isTicking$ = this.chosenLettersService.chosenLetters$.pipe(
     map((selectedLetters) => {
       const isTicking = selectedLetters.length === Constants.MAX_LETTERS;
       isTicking ? this.startTimerSubject$.next() : this.stopTimerSubjec$.next();
@@ -71,7 +72,10 @@ export class TimerService {
     })
   );
 
-  constructor(private readonly globalStateService: GlobalStateService) {}
+  constructor(
+    private readonly globalStateService: GlobalStateService,
+    private readonly chosenLettersService: ChosenLettersService
+  ) {}
 
   reset() {
     this.resetCountdownTimeSubject$.next(Constants.SECONDS);

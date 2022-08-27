@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
+  BehaviorSubject,
   filter,
   map,
   merge,
@@ -11,13 +12,15 @@ import {
   withLatestFrom,
 } from 'rxjs';
 import { Constants } from '../helpers/constants';
-import { GlobalStateService } from './global-state.service';
 import { RandomLetterService } from './random-letter.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ChosenLettersService {
+  private chosenLettersCacheSubject$ = new BehaviorSubject<string>('');
+  private chosenLettersCache$ = this.chosenLettersCacheSubject$.asObservable();
+
   private initialChosenLetters: Observable<string> = of('');
 
   private resetChosenLettersSubject$ = new Subject<void>();
@@ -26,7 +29,7 @@ export class ChosenLettersService {
 
   private accumulatedChosenLetters$ =
     this.randomLetterService.randomLetter$.pipe(
-      withLatestFrom(this.globalStateService.chosenLetters$),
+      withLatestFrom(this.chosenLettersCache$),
       filter(
         ([, chosenLettersCache]) =>
           chosenLettersCache.length < Constants.MAX_LETTERS
@@ -43,15 +46,12 @@ export class ChosenLettersService {
     this.resetChosenLetters$
   ).pipe(
     tap((displayLetters) => {
-      this.globalStateService.setChosenLetters(displayLetters);
+      this.chosenLettersCacheSubject$.next(displayLetters);
     }),
     shareReplay()
   );
 
-  constructor(
-    private readonly globalStateService: GlobalStateService,
-    private readonly randomLetterService: RandomLetterService
-  ) {}
+  constructor(private readonly randomLetterService: RandomLetterService) {}
 
   reset() {
     this.resetChosenLettersSubject$.next();
