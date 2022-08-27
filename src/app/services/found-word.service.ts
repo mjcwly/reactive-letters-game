@@ -1,6 +1,15 @@
 import { Injectable } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import { map, merge, Observable, of, Subject, switchMap } from 'rxjs';
+import {
+  BehaviorSubject,
+  map,
+  merge,
+  Observable,
+  of,
+  Subject,
+  switchMap,
+  shareReplay,
+} from 'rxjs';
 import { catchError, filter, tap, withLatestFrom } from 'rxjs/operators';
 import { FoundWord } from '../models/found-word.model';
 import { WordDefinitionNotFoundResponse } from '../models/word-definition.model';
@@ -13,6 +22,10 @@ import { TypedLettersService } from './typed-letters.service';
   providedIn: 'root',
 })
 export class FoundWordService {
+  private foundWordArrayCacheSubject$ = new BehaviorSubject<FoundWord[]>(null);
+  private foundWordArrayCache$ =
+    this.foundWordArrayCacheSubject$.asObservable();
+
   private initialFoundWordArray$: Observable<FoundWord[]> = of([]);
 
   private resetFoundWordArraySubject$ = new Subject<void>();
@@ -30,6 +43,8 @@ export class FoundWordService {
               typedLetters,
               `${typedLetters.length} Letter Word Found!`
             );
+
+            this.globalStateService.newWordFound();
 
             const newFoundWord: FoundWord = {
               word: typedLetters,
@@ -56,29 +71,30 @@ export class FoundWordService {
 
   private accumulatedFoundWordArray$: Observable<FoundWord[]> =
     this.newFoundWord$.pipe(
-      withLatestFrom(this.globalStateService.foundWordArray$),
+      withLatestFrom(this.foundWordArrayCache$),
       map(([newWord, enteredWords]) => {
         const accumulatedWords = [...enteredWords, newWord];
         return accumulatedWords;
       })
     );
 
-  displayFoundWordArray$: Observable<FoundWord[]> = merge(
+  foundWordArray$: Observable<FoundWord[]> = merge(
     this.initialFoundWordArray$,
     this.accumulatedFoundWordArray$,
     this.resetFoundWordArray$
   ).pipe(
     tap((foundWordArray: FoundWord[]) => {
-      this.globalStateService.setFoundWordArray(foundWordArray);
-    })
+      this.foundWordArrayCacheSubject$.next(foundWordArray);
+    }),
+    shareReplay()
   );
 
   constructor(
     private readonly keyPressService: KeyPressService,
-    private readonly globalStateService: GlobalStateService,
     private readonly dictionaryApiService: DictionaryApiService,
     private readonly typedLettersService: TypedLettersService,
-    private readonly toastr: ToastrService
+    private readonly toastr: ToastrService,
+    private readonly globalStateService: GlobalStateService
   ) {}
 
   reset() {

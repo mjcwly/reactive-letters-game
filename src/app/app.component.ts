@@ -25,7 +25,7 @@ export class AppComponent {
     this.globalStateService.gameActive$,
     this.timerService.timerSettings$,
     this.typedLettersService.typedLetters$,
-    this.foundWordsService.displayFoundWordArray$,
+    this.foundWordsService.foundWordArray$,
     this.chosenLettersArrayService.chosenLetterArray$,
     this.scoreService.displayScore$,
   ]).pipe(

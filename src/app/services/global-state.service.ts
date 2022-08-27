@@ -1,24 +1,19 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { FoundWord } from '../models/found-word.model';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { ITimerSettings } from '../models/timer-settings';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GlobalStateService {
-  private foundWordArraySubject$ = new BehaviorSubject<FoundWord[]>([]);
-  foundWordArray$ = this.foundWordArraySubject$.asObservable();
+  private newWordFoundSubject$ = new Subject<void>();
+  newWordFound$ = this.newWordFoundSubject$.asObservable();
 
   private timerSettingsSubject$ = new BehaviorSubject<ITimerSettings>(null);
   timerSettings$ = this.timerSettingsSubject$.asObservable();
 
   private gameActiveSubject$ = new BehaviorSubject<boolean>(false);
   gameActive$ = this.gameActiveSubject$.asObservable();
-
-  setFoundWordArray(foundWordArray: FoundWord[]) {
-    this.foundWordArraySubject$.next(foundWordArray);
-  }
 
   setTimerSettings(timerSettings: ITimerSettings) {
     this.timerSettingsSubject$.next(timerSettings);
@@ -30,5 +25,9 @@ export class GlobalStateService {
 
   endGame() {
     this.gameActiveSubject$.next(false);
+  }
+
+  newWordFound() {
+    this.newWordFoundSubject$.next();
   }
 }

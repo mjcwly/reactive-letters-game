@@ -2,15 +2,15 @@ import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { FoundWord } from '../models/found-word.model';
 import { ScoreItem, ScoreModel } from '../models/score';
-import { GlobalStateService } from './global-state.service';
 import { Constants } from '../helpers/constants';
+import { FoundWordService } from './found-word.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ScoreService {
   private scoreItems$: Observable<ScoreItem[]> =
-    this.globalStateService.foundWordArray$.pipe(
+    this.foundWordService.foundWordArray$.pipe(
       map((foundWordArray: FoundWord[]) => {
         // Output: [3,4,5,6,7,8,9]
         // when MIN_LETTERS = 3, MAX_LETTERS = 9
@@ -57,5 +57,5 @@ export class ScoreService {
     })
   );
 
-  constructor(private readonly globalStateService: GlobalStateService) {}
+  constructor(private readonly foundWordService: FoundWordService) {}
 }
