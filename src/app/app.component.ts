@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { combineLatest, map } from 'rxjs';
-import { GameState } from './models/game-state.enum';
 import { LetterType } from './models/letter-type';
 import { ChosenLettersArrayService } from './services/chosen-letters-array.service';
 import { ChosenLettersService } from './services/chosen-letters.service';
@@ -18,35 +17,30 @@ import { TypedLettersService } from './services/typed-letters.service';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  gameState = GameState;
-
   vm$ = combineLatest([
-    this.gameStateService.gameState$,
-    this.globalStateService.gameActive$,
+    this.gameStateService.gameStateModel$,
     this.timerService.timerSettings$,
+    this.chosenLettersArrayService.chosenLetterArray$,
     this.typedLettersService.typedLetters$,
     this.foundWordsService.foundWordArray$,
-    this.chosenLettersArrayService.chosenLetterArray$,
     this.scoreService.scoreModel$,
   ]).pipe(
     map(
       ([
-        gameState,
-        gameActive,
+        gameStateModel,
         timerSettings,
+        chosenLetterArray,
         typedLetters,
         foundWordArray,
-        chosenLetterArray,
-        score,
+        scoreModel,
       ]) => {
         return {
-          gameState,
-          gameActive,
+          gameStateModel,
           timerSettings,
+          chosenLetterArray,
           typedLetters,
           foundWordArray,
-          chosenLetterArray,
-          score,
+          scoreModel,
         };
       }
     )

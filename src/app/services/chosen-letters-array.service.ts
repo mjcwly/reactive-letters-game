@@ -6,7 +6,7 @@ import {
   ChosenLetter,
   QuestionMark,
 } from '../models/chosen-letter.model';
-import { GameState } from '../models/game-state.enum';
+import { GameStateModel } from '../models/game-state.model';
 import { ChosenLettersService } from './chosen-letters.service';
 import { GameStateService } from './game-state.service';
 import { TypedLettersService } from './typed-letters.service';
@@ -16,9 +16,9 @@ import { TypedLettersService } from './typed-letters.service';
 })
 export class ChosenLettersArrayService {
   private fillChar$: Observable<ChosenLetter> =
-    this.gameStateService.gameState$.pipe(
-      map((gameState: GameState) =>
-        gameState === GameState.LetterSelection ? QuestionMark : Blank
+    this.gameStateService.gameStateModel$.pipe(
+      map((gameStateModel: GameStateModel) =>
+        gameStateModel.isLetterSelection ? QuestionMark : Blank
       )
     );
 

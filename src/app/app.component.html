@@ -4,7 +4,7 @@
   <hr />
 
   <button
-    *ngIf="!vm.gameActive"
+    *ngIf="vm.gameStateModel.isGameInactive"
     class="btn btn-primary w-100"
     (click)="onStartButtonClicked()"
   >
@@ -12,7 +12,7 @@
   </button>
 
   <button
-    *ngIf="vm.gameActive"
+    *ngIf="vm.gameStateModel.isGameActive"
     class="btn btn-secondary w-100"
     (click)="onResetButtonClicked()"
   >
@@ -23,12 +23,12 @@
 
   <chosen-letters
     [chosenLetterArray]="vm.chosenLetterArray"
-    [gameState]="vm.gameState"
+    [gameState]="vm.gameStateModel.gameState"
   ></chosen-letters>
 
   <hr />
 
-  <div *ngIf="vm.gameActive">
+  <div *ngIf="vm.gameStateModel.isGameActive">
     <letter-selector
       *ngIf="!vm.timerSettings.isTicking"
       (letterTypeSelectedEvent)="letterTypeSelectedHandler($event)"
@@ -41,31 +41,28 @@
     <hr />
   </div>
 
-  <div *ngIf="vm.gameState === gameState.PlayingGame">
+  <div *ngIf="vm.gameStateModel.isPlayingGame">
     <typed-letters
       [letters]="vm.typedLetters"
-      [gameState]="vm.gameState"
+      [gameState]="vm.gameStateModel.gameState"
     ></typed-letters>
     <hr />
   </div>
 
   <div
     *ngIf="
-      (vm.gameState === gameState.PlayingGame &&
-        vm.foundWordArray.length > 0) ||
-      vm.gameState === gameState.ViewScore
+      (vm.gameStateModel.isPlayingGame && vm.foundWordArray.length > 0) ||
+      vm.gameStateModel.isViewScore
     "
   >
     <found-words [foundWordArray]="vm.foundWordArray"></found-words>
     <hr />
   </div>
 
-  <div
-    *ngIf="vm.gameState === gameState.ViewScore"
-  >
+  <div *ngIf="vm.gameStateModel.isViewScore">
     <score
       *ngIf="vm.timerSettings.displayTime === 0"
-      [score]="vm.score"
+      [score]="vm.scoreModel"
     ></score>
   </div>
 </div>
