@@ -44,8 +44,6 @@ export class FoundWordService {
               `${typedLetters.length} Letter Word Found!`
             );
 
-            this.globalStateService.newWordFound();
-
             const newFoundWord: FoundWord = {
               word: typedLetters,
               isValidWord: true,
@@ -73,6 +71,7 @@ export class FoundWordService {
     this.newFoundWord$.pipe(
       withLatestFrom(this.foundWordArrayCache$),
       map(([newWord, enteredWords]) => {
+        this.globalStateService.newWordAttempted();
         const accumulatedWords = [...enteredWords, newWord];
         return accumulatedWords;
       })

@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, map, merge, of, Subject } from 'rxjs';
 import { filter, shareReplay, tap, withLatestFrom } from 'rxjs/operators';
 import { ChosenLettersService } from './chosen-letters.service';
-import { FoundWordService } from './found-word.service';
 import { GlobalStateService } from './global-state.service';
 import { KeyPressService } from './key-press.service';
 
@@ -62,7 +61,7 @@ export class TypedLettersService {
   private resetTypedLetters$ = merge(
     this.resetTypedLettersSubject$,
     this.keyPressService.escKeyPress$,
-    this.globalStateService.newWordFound$
+    this.globalStateService.newWordAttempted$
   ).pipe(map(() => ''));
 
   typedLetters$ = merge(
