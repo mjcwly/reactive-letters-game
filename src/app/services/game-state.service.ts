@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { combineLatest, filter, map, merge, Observable, of } from 'rxjs';
 import { GameState } from '../models/game-state.enum';
 import { GlobalStateService } from './global-state.service';
+import { TimerService } from './timer.service';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +17,7 @@ export class GameStateService {
 
   private activeGameState$ = combineLatest([
     this.globalStateService.gameActive$,
-    this.globalStateService.timerSettings$,
+    this.timerService.timerSettings$,
   ]).pipe(
     filter(([gameActive]) => gameActive),
     map(([_, timerSettings]) => {
@@ -34,5 +35,8 @@ export class GameStateService {
     this.activeGameState$
   );
 
-  constructor(private readonly globalStateService: GlobalStateService) {}
+  constructor(
+    private readonly globalStateService: GlobalStateService,
+    private readonly timerService: TimerService
+  ) {}
 }
