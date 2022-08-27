@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { ToastrService } from 'ngx-toastr';
 import { combineLatest, map } from 'rxjs';
 import { GameState } from './models/game-state.enum';
 import { LetterType } from './models/letter-type';
@@ -24,7 +23,6 @@ export class AppComponent {
   vm$ = combineLatest([
     this.gameStateService.gameState$,
     this.globalStateService.gameActive$,
-    this.chosenLettersService.chosenLetters$,
     this.timerService.timerSettings$,
     this.typedLettersService.displayTypedLetters$,
     this.foundWordsService.displayFoundWordArray$,
@@ -35,7 +33,6 @@ export class AppComponent {
       ([
         gameState,
         gameActive,
-        chosenLetters,
         timerSettings,
         typedLetters,
         foundWordArray,
@@ -45,7 +42,6 @@ export class AppComponent {
         return {
           gameState,
           gameActive,
-          chosenLetters,
           timerSettings,
           typedLetters,
           foundWordArray,

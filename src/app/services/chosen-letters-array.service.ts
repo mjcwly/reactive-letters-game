@@ -7,6 +7,7 @@ import {
   QuestionMark,
 } from '../models/chosen-letter.model';
 import { GameState } from '../models/game-state.enum';
+import { ChosenLettersService } from './chosen-letters.service';
 import { GameStateService } from './game-state.service';
 import { GlobalStateService } from './global-state.service';
 
@@ -22,7 +23,7 @@ export class ChosenLettersArrayService {
     );
 
   chosenLetterArray$: Observable<ChosenLetter[]> = combineLatest([
-    this.globalStateService.chosenLetters$,
+    this.chosenLettersService.chosenLetters$,
     this.globalStateService.typedLetters$,
     this.fillChar$,
   ]).pipe(
@@ -62,6 +63,7 @@ export class ChosenLettersArrayService {
 
   constructor(
     private readonly gameStateService: GameStateService,
+    private readonly chosenLettersService: ChosenLettersService,
     private readonly globalStateService: GlobalStateService
   ) {}
 }
