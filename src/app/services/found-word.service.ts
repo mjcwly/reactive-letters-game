@@ -14,6 +14,7 @@ import { catchError, filter, tap, withLatestFrom } from 'rxjs/operators';
 import { FoundWord } from '../models/found-word.model';
 import { WordDefinitionNotFoundResponse } from '../models/word-definition.model';
 import { DictionaryApiService } from './dictionary-api.service';
+import { GameStateService } from './game-state.service';
 import { GlobalStateService } from './global-state.service';
 import { KeyPressService } from './key-press.service';
 import { TypedLettersService } from './typed-letters.service';
@@ -34,8 +35,14 @@ export class FoundWordService {
 
   private newFoundWord$: Observable<FoundWord> =
     this.keyPressService.enterKeyPress$.pipe(
-      withLatestFrom(this.typedLettersService.typedLetters$),
-      filter(([_, typedLetters]) => !!typedLetters),
+      withLatestFrom(
+        this.typedLettersService.typedLetters$,
+        this.gameStateService.gameStateModel$
+      ),
+      filter(
+        ([_, typedLetters, gameStateModel]) =>
+          !!typedLetters && gameStateModel.isPlayingGame
+      ),
       switchMap(([_, typedLetters]) =>
         this.dictionaryApiService.getWordDefinition(typedLetters).pipe(
           map(() => {
@@ -93,6 +100,7 @@ export class FoundWordService {
     private readonly dictionaryApiService: DictionaryApiService,
     private readonly typedLettersService: TypedLettersService,
     private readonly toastr: ToastrService,
+    private readonly gameStateService: GameStateService,
     private readonly globalStateService: GlobalStateService
   ) {}
 
