@@ -3,7 +3,7 @@ import { combineLatest, filter, map, merge, Observable, of } from 'rxjs';
 import { GameState } from '../models/game-state.enum';
 import { GameStateModel } from '../models/game-state.model';
 import { GlobalStateService } from './global-state.service';
-import { TimerService } from './timer.service';
+import { TimerStateService } from './timer-state.service';
 
 @Injectable({
   providedIn: 'root',
@@ -18,13 +18,13 @@ export class GameStateService {
 
   private activeGameState$ = combineLatest([
     this.globalStateService.isGameActive$,
-    this.timerService.timerSettings$,
+    this.timerStateService.timerStateModel$,
   ]).pipe(
     filter(([gameActive]) => gameActive),
-    map(([_, timerSettings]) => {
-      return !timerSettings.isTicking
+    map(([_, timerStateModel]) => {
+      return !timerStateModel.isTicking
         ? GameState.LetterSelection
-        : timerSettings.displayTime > 0
+        : timerStateModel.displayTime > 0
         ? GameState.PlayingGame
         : GameState.ViewScore;
     })
@@ -52,6 +52,6 @@ export class GameStateService {
 
   constructor(
     private readonly globalStateService: GlobalStateService,
-    private readonly timerService: TimerService
+    private readonly timerStateService: TimerStateService
   ) {}
 }

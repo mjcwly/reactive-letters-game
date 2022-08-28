@@ -40,7 +40,7 @@ export class ChosenLettersService {
       })
     );
 
-  chosenLetters$ = merge(
+  chosenLetters$: Observable<string> = merge(
     this.initialChosenLetters,
     this.accumulatedChosenLetters$,
     this.resetChosenLetters$
@@ -49,6 +49,10 @@ export class ChosenLettersService {
       this.chosenLettersCacheSubject$.next(displayLetters);
     }),
     shareReplay()
+  );
+
+  isChosenLettersFull$: Observable<boolean> = this.chosenLetters$.pipe(
+    map((chosenLetters) => chosenLetters.length === Constants.MAX_LETTERS)
   );
 
   constructor(private readonly randomLetterService: RandomLetterService) {}

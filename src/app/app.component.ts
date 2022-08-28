@@ -8,7 +8,7 @@ import { GameStateService } from './services/game-state.service';
 import { GlobalStateService } from './services/global-state.service';
 import { RandomLetterService } from './services/random-letter.service';
 import { ScoreService } from './services/score.service';
-import { TimerService } from './services/timer.service';
+import { TimerStateService } from './services/timer-state.service';
 import { TypedLettersService } from './services/typed-letters.service';
 
 @Component({
@@ -19,7 +19,7 @@ import { TypedLettersService } from './services/typed-letters.service';
 export class AppComponent {
   vm$ = combineLatest([
     this.gameStateService.gameStateModel$,
-    this.timerService.timerSettings$,
+    this.timerStateService.timerStateModel$,
     this.chosenLettersArrayService.chosenLetterArray$,
     this.typedLettersService.typedLetters$,
     this.foundWordsService.foundWordArray$,
@@ -28,7 +28,7 @@ export class AppComponent {
     map(
       ([
         gameStateModel,
-        timerSettings,
+        timerStateModel,
         chosenLetterArray,
         typedLetters,
         foundWordArray,
@@ -36,7 +36,7 @@ export class AppComponent {
       ]) => {
         return {
           gameStateModel,
-          timerSettings,
+          timerStateModel,
           chosenLetterArray,
           typedLetters,
           foundWordArray,
@@ -50,7 +50,7 @@ export class AppComponent {
     private readonly chosenLettersService: ChosenLettersService,
     private readonly randomLetterService: RandomLetterService,
     private readonly typedLettersService: TypedLettersService,
-    private readonly timerService: TimerService,
+    private readonly timerStateService: TimerStateService,
     private readonly foundWordsService: FoundWordService,
     private readonly scoreService: ScoreService,
     private readonly globalStateService: GlobalStateService,
@@ -69,7 +69,7 @@ export class AppComponent {
   onResetButtonClicked() {
     this.typedLettersService.reset();
     this.chosenLettersService.reset();
-    this.timerService.reset();
+    this.timerStateService.reset();
     this.foundWordsService.reset();
     this.globalStateService.setGameActive(false);
   }
