@@ -42,8 +42,8 @@ export class TimerStateService {
     switchMap(() =>
       interval(1000).pipe(
         withLatestFrom(this.secondsRemainingCache$),
-        map(([_, countdownTimer]) => countdownTimer - 1),
-        takeWhile((countdownTimer) => countdownTimer >= 0),
+        map(([_, secondsRemaining]) => secondsRemaining - 1),
+        takeWhile((secondsRemaining) => secondsRemaining >= 0),
         takeUntil(this.resetSecondsRemainingSubject$)
       )
     )
@@ -54,8 +54,8 @@ export class TimerStateService {
     this.intervalSecondsRemaining$,
     this.resetSecondsRemaining$
   ).pipe(
-    tap((countdownTimer) => {
-      this.secondsRemainingCacheSubject$.next(countdownTimer);
+    tap((secondsRemaining) => {
+      this.secondsRemainingCacheSubject$.next(secondsRemaining);
     }),
     shareReplay()
   );
