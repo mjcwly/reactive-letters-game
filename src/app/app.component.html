@@ -35,8 +35,7 @@
     ></letter-selector>
     <countdown-timer
       *ngIf="vm.timerStateModel.isTicking"
-      [timeRemaining]="vm.timerStateModel.displayTime"
-      [initialTime]="vm.timerStateModel.initialCountdownTime"
+      [timerStateModel]="vm.timerStateModel"
     ></countdown-timer>
     <hr />
   </div>
@@ -61,7 +60,7 @@
 
   <div *ngIf="vm.gameStateModel.isViewScore">
     <score
-      *ngIf="vm.timerStateModel.displayTime === 0"
+      *ngIf="vm.timerStateModel.secondsRemaining === 0"
       [score]="vm.scoreModel"
     ></score>
   </div>

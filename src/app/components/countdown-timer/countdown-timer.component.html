@@ -1,17 +1,17 @@
 <div
-  *ngIf="timeRemaining > 0; else timeUp"
+  *ngIf="timerStateModel.secondsRemaining > 0; else timeUp"
   class="progress"
   style="height: 40px;"
 >
   <div
     class="progress-bar progress-bar-striped progress-bar-animated"
     role="progressbar"
-    [ngStyle]="{ 'width.%': percentage }"
-    [attr.aria-valuenow]="percentage"
+    [ngStyle]="{ 'width.%': timerStateModel.percentageTimeRemaining }"
+    [attr.aria-valuenow]="timerStateModel.percentageTimeRemaining"
     aria-valuemin="0"
     aria-valuemax="100"
   >
-    {{ timeRemaining }}
+    {{ timerStateModel.secondsRemaining }}
   </div>
 </div>
 <ng-template #timeUp>

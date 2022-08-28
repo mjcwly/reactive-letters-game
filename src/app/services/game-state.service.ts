@@ -24,7 +24,7 @@ export class GameStateService {
     map(([_, timerStateModel]) => {
       return !timerStateModel.isTicking
         ? GameState.LetterSelection
-        : timerStateModel.displayTime > 0
+        : timerStateModel.secondsRemaining > 0
         ? GameState.PlayingGame
         : GameState.ViewScore;
     })

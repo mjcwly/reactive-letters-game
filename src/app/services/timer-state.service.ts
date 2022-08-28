@@ -56,6 +56,18 @@ export class TimerStateService {
   ).pipe(
     tap((countdownTimer) => {
       this.secondsRemainingCacheSubject$.next(countdownTimer);
+    }),
+    shareReplay()
+  );
+
+  private percentageTimeRemaining$: Observable<number> = combineLatest([
+    this.secondsRemaining$,
+    this.initialSecondsRemaining$,
+  ]).pipe(
+    map(([secondsRemaining, initialSecondsRemaining]) => {
+      const percentage =
+        ((secondsRemaining * 100) / (initialSecondsRemaining * 100)) * 100;
+      return percentage;
     })
   );
 
@@ -63,10 +75,23 @@ export class TimerStateService {
     this.isTicking$,
     this.secondsRemaining$,
     this.initialSecondsRemaining$,
+    this.percentageTimeRemaining$,
   ]).pipe(
-    map(([isTicking, displayTime, initialCountdownTime]) => {
-      return { isTicking, displayTime, initialCountdownTime };
-    }),
+    map(
+      ([
+        isTicking,
+        secondsRemaining,
+        initialCountdownTime,
+        percentageTimeRemaining,
+      ]) => {
+        return {
+          isTicking,
+          secondsRemaining,
+          initialCountdownTime,
+          percentageTimeRemaining,
+        };
+      }
+    ),
     shareReplay()
   );
 

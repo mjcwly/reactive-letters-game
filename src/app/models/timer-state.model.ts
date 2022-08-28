@@ -1,5 +1,6 @@
 export interface ITimerStateModel {
   isTicking: boolean;
-  displayTime: number;
+  secondsRemaining: number;
   initialCountdownTime: number;
+  percentageTimeRemaining: number;
 }
