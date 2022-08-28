@@ -23,51 +23,56 @@ import { ChosenLettersService } from './chosen-letters.service';
   providedIn: 'root',
 })
 export class TimerStateService {
-  private secondsRemainingCacheSubject$ = new BehaviorSubject<number>(null);
-  private secondsRemainingCache$ =
-    this.secondsRemainingCacheSubject$.asObservable();
+  private tenthsRemainingCacheSubject$ = new BehaviorSubject<number>(null);
 
   private isTicking$ = this.chosenLettersService.isChosenLettersFull$;
 
   private initialSecondsRemaining$: Observable<number> = of(Constants.SECONDS);
+  private initialTenthsRemaining$: Observable<number> =
+    this.initialSecondsRemaining$.pipe(map((seconds) => seconds * 10));
 
-  private resetSecondsRemainingSubject$ = new Subject<void>();
-  private resetSecondsRemaining$: Observable<number> =
-    this.resetSecondsRemainingSubject$
+  private resetTenthsRemainingSubject$ = new Subject<void>();
+  private resetTenthsRemaining$: Observable<number> =
+    this.resetTenthsRemainingSubject$
       .asObservable()
-      .pipe(switchMap(() => this.initialSecondsRemaining$));
+      .pipe(switchMap(() => this.initialTenthsRemaining$));
 
-  private intervalSecondsRemaining$: Observable<number> = this.isTicking$.pipe(
+  private intervalTenthsRemaining$: Observable<number> = this.isTicking$.pipe(
     filter((isTicking$: boolean) => isTicking$),
     switchMap(() =>
-      interval(1000).pipe(
-        withLatestFrom(this.secondsRemainingCache$),
-        map(([_, secondsRemaining]) => secondsRemaining - 1),
-        takeWhile((secondsRemaining) => secondsRemaining >= 0),
-        takeUntil(this.resetSecondsRemainingSubject$)
+      interval(100).pipe(
+        withLatestFrom(this.tenthsRemainingCacheSubject$),
+        map(([_, tenthsRemaining]) => tenthsRemaining - 1),
+        takeWhile((tenthsRemaining) => tenthsRemaining >= 0),
+        takeUntil(this.resetTenthsRemainingSubject$)
       )
     )
   );
 
-  private secondsRemaining$: Observable<number> = merge(
-    this.initialSecondsRemaining$,
-    this.intervalSecondsRemaining$,
-    this.resetSecondsRemaining$
+  private tenthsRemaining$: Observable<number> = merge(
+    this.initialTenthsRemaining$,
+    this.intervalTenthsRemaining$,
+    this.resetTenthsRemaining$
   ).pipe(
-    tap((secondsRemaining) => {
-      this.secondsRemainingCacheSubject$.next(secondsRemaining);
+    tap((tenthsRemaining) => {
+      this.tenthsRemainingCacheSubject$.next(tenthsRemaining);
     }),
     shareReplay()
   );
 
-  private percentageTimeRemaining$: Observable<number> = combineLatest([
-    this.secondsRemaining$,
-    this.initialSecondsRemaining$,
+  private secondsRemaining$ = this.tenthsRemaining$.pipe(
+    map((tenthsRemaining) => Math.ceil(tenthsRemaining / 10))
+  );
+
+  private percentageRemaining$: Observable<number> = combineLatest([
+    this.tenthsRemaining$,
+    this.initialTenthsRemaining$,
   ]).pipe(
-    map(([secondsRemaining, initialSecondsRemaining]) => {
-      const percentage =
-        ((secondsRemaining * 100) / (initialSecondsRemaining * 100)) * 100;
-      return percentage;
+    map(([tenthsRemaining, initialTenthsRemaining]) => {
+      const percentageRemaining = Math.round(
+        (tenthsRemaining / initialTenthsRemaining) * 100
+      );
+      return percentageRemaining;
     })
   );
 
@@ -75,7 +80,7 @@ export class TimerStateService {
     this.isTicking$,
     this.secondsRemaining$,
     this.initialSecondsRemaining$,
-    this.percentageTimeRemaining$,
+    this.percentageRemaining$,
   ]).pipe(
     map(
       ([
@@ -98,6 +103,6 @@ export class TimerStateService {
   constructor(private readonly chosenLettersService: ChosenLettersService) {}
 
   reset() {
-    this.resetSecondsRemainingSubject$.next();
+    this.resetTenthsRemainingSubject$.next();
   }
 }
