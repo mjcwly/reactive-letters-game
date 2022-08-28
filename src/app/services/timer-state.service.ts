@@ -35,7 +35,7 @@ export class TimerStateService {
   private resetSecondsRemaining$: Observable<number> =
     this.resetSecondsRemainingSubject$
       .asObservable()
-      .pipe(map(() => Constants.SECONDS));
+      .pipe(switchMap(() => this.initialSecondsRemaining$));
 
   private intervalSecondsRemaining$: Observable<number> = this.isTicking$.pipe(
     filter((isTicking$: boolean) => isTicking$),
