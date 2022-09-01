@@ -24,6 +24,7 @@
   <chosen-letters
     [chosenLetterArray]="vm.chosenLetterArray"
     [gameState]="vm.gameStateModel.gameState"
+    (shuffleChosenLettersEvent)="shuffleChosenLettersHandler()"
   ></chosen-letters>
 
   <hr />

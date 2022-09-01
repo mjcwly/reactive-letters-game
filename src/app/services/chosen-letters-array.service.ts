@@ -1,5 +1,12 @@
 import { Injectable } from '@angular/core';
-import { catchError, combineLatest, EMPTY, map, Observable } from 'rxjs';
+import {
+  catchError,
+  combineLatest,
+  EMPTY,
+  map,
+  Observable,
+  Subject,
+} from 'rxjs';
 import { Constants } from '../helpers/constants';
 import {
   Blank,
@@ -15,6 +22,8 @@ import { TypedLettersService } from './typed-letters.service';
   providedIn: 'root',
 })
 export class ChosenLettersArrayService {
+  private shuffleSubject$ = new Subject<void>();
+
   private fillChar$: Observable<ChosenLetter> =
     this.gameStateService.gameStateModel$.pipe(
       map((gameStateModel: GameStateModel) =>
@@ -66,4 +75,8 @@ export class ChosenLettersArrayService {
     private readonly chosenLettersService: ChosenLettersService,
     private readonly typedLettersService: TypedLettersService
   ) {}
+
+  shuffle() {
+    this.shuffleSubject$.next();
+  }
 }

@@ -73,4 +73,8 @@ export class AppComponent {
     this.foundWordsService.reset();
     this.globalStateService.setGameActive(false);
   }
+
+  shuffleChosenLettersHandler() {
+    this.chosenLettersArrayService.shuffle();
+  }
 }
