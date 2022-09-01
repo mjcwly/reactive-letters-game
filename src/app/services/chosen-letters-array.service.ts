@@ -4,8 +4,10 @@ import {
   combineLatest,
   EMPTY,
   map,
+  merge,
   Observable,
   Subject,
+  withLatestFrom,
 } from 'rxjs';
 import { Constants } from '../helpers/constants';
 import {
@@ -31,12 +33,14 @@ export class ChosenLettersArrayService {
       )
     );
 
-  chosenLetterArray$: Observable<ChosenLetter[]> = combineLatest([
-    this.chosenLettersService.chosenLetters$,
-    this.typedLettersService.typedLetters$,
-    this.fillChar$,
-  ]).pipe(
-    map(([chosenLetters, typedLetters, fillChar]) => {
+  private derivedChosenLetterArray$: Observable<ChosenLetter[]> = combineLatest(
+    [
+      this.chosenLettersService.chosenLetters$,
+      this.typedLettersService.typedLetters$,
+    ]
+  ).pipe(
+    withLatestFrom(this.fillChar$),
+    map(([[chosenLetters, typedLetters], fillChar]) => {
       const chosenLettersArr = [...chosenLetters];
       const prefilledChosenLettersArr = new Array(Constants.MAX_LETTERS).fill(
         fillChar
@@ -68,6 +72,18 @@ export class ChosenLettersArrayService {
       console.warn('chosenLetterArray$ | catchError | err', err);
       return EMPTY;
     })
+  );
+
+  private shuffledChosenLettersArray$ = this.shuffleSubject$.pipe(
+    withLatestFrom(this.derivedChosenLetterArray$),
+    map(([_, chosenLetterArray]) => {
+      return chosenLetterArray.sort(() => 0.5 - Math.random());
+    })
+  );
+
+  chosenLetterArray$ = merge(
+    this.derivedChosenLetterArray$,
+    this.shuffledChosenLettersArray$
   );
 
   constructor(
