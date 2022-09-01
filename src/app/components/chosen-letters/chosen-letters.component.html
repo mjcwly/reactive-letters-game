@@ -14,4 +14,12 @@
       <span>{{ chosenLetterObj?.letter }}</span>
     </p>
   </div>
+  <button
+    class="btn letter-tile text-center m-0"
+    [ngClass]="
+      isOutOfFocus ? 'btn-secondary text-light' : 'btn-primary text-light'
+    "
+  >
+    <i class="fa fa-refresh"></i>
+  </button>
 </div>
