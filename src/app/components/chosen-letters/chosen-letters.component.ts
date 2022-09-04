@@ -1,4 +1,13 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+ViewChild,
+} from '@angular/core';
 import { ChosenLetter } from '../../models/chosen-letter.model';
 import { GameState } from '../../models/game-state.enum';
 
@@ -11,6 +20,7 @@ export class ChosenLettersComponent implements OnChanges {
   @Input() chosenLetterArray: ChosenLetter[];
   @Input() gameState: GameState;
   @Output() shuffleChosenLettersEvent = new EventEmitter<void>();
+  @ViewChild('shuffleButtonRef') shuffleButton: ElementRef<HTMLInputElement>;
 
   isOutOfFocus = false;
 
@@ -20,6 +30,7 @@ export class ChosenLettersComponent implements OnChanges {
   }
 
   onShuffleButtonClicked() {
+    this.shuffleButton.nativeElement.blur();
     this.shuffleChosenLettersEvent.emit();
   }
 }
