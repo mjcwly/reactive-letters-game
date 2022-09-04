@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { map, Observable, of, Subject, switchMap } from 'rxjs';
+import { Constants } from '../helpers/constants';
 import { LetterType } from '../models/letter-type';
 
 @Injectable({
@@ -10,10 +11,9 @@ export class RandomLetterService {
 
   private letterSet$: Observable<string> = this.randomLetterType$.pipe(
     map((randomLetterType: LetterType) => {
-      const vowels: string = 'AAAAAAAAAEEEEEEEEEEEEIIIIIIIIIOOOOOOOOUUUU';
-      const consonants: string =
-        'BBCCDDDDFFGGGHHJKLLLLMMNNNNNNPPQRRRRRRSSSSTTTTTTVVWWXYYZ';
-      return randomLetterType === LetterType.Vowel ? vowels : consonants;
+      return randomLetterType === LetterType.Vowel
+        ? Constants.VOWELS_LETTER_SET
+        : Constants.CONSONANTS_LETTER_SET;
     })
   );
 
