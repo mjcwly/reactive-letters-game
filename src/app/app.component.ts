@@ -58,10 +58,6 @@ export class AppComponent {
     private readonly chosenLettersArrayService: ChosenLettersArrayService
   ) {}
 
-  letterTypeSelectedHandler(letterType: LetterType) {
-    this.randomLetterService.setRandomLetterType(letterType);
-  }
-
   onStartButtonClicked() {
     this.globalStateService.setGameActive(true);
   }
@@ -72,6 +68,14 @@ export class AppComponent {
     this.timerStateService.reset();
     this.foundWordsService.reset();
     this.globalStateService.setGameActive(false);
+  }
+
+  letterTypeSelectedHandler(letterType: LetterType) {
+    this.randomLetterService.setRandomLetterType(letterType);
+  }
+
+  autoSelectChosenLettersHandler() {
+    this.chosenLettersService.autoSelect();
   }
 
   shuffleChosenLettersHandler() {

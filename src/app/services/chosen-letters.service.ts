@@ -10,8 +10,10 @@ import {
   Subject,
   tap,
   withLatestFrom,
+  switchMap,
 } from 'rxjs';
 import { Constants } from '../helpers/constants';
+import { LetterType } from '../models/letter-type';
 import { RandomLetterService } from './random-letter.service';
 
 @Injectable({
@@ -19,15 +21,18 @@ import { RandomLetterService } from './random-letter.service';
 })
 export class ChosenLettersService {
   private shuffleSubject$ = new Subject<void>();
+  private autoSelectSubject$ = new Subject<void>();
 
   private chosenLettersCacheSubject$ = new BehaviorSubject<string>('');
   private chosenLettersCache$ = this.chosenLettersCacheSubject$.asObservable();
 
-  private initialChosenLetters: Observable<string> = of('');
+  private initialChosenLetters$: Observable<string> = of('');
 
   private resetChosenLettersSubject$ = new Subject<void>();
   private resetChosenLetters$: Observable<string> =
-    this.resetChosenLettersSubject$.pipe(map(() => ''));
+    this.resetChosenLettersSubject$.pipe(
+      switchMap(() => this.initialChosenLetters$)
+    );
 
   private accumulatedChosenLetters$ =
     this.randomLetterService.randomLetter$.pipe(
@@ -39,7 +44,8 @@ export class ChosenLettersService {
       map(([randomLetter, chosenLettersCache]) => {
         const accumulatedLetters = chosenLettersCache + randomLetter;
         return accumulatedLetters;
-      })
+      }),
+      shareReplay()
     );
 
   private shuffledChosenLetters$ = this.shuffleSubject$.pipe(
@@ -52,11 +58,24 @@ export class ChosenLettersService {
     })
   );
 
+  private autoChosenLetters$: Observable<string> = this.autoSelectSubject$.pipe(
+    withLatestFrom(this.chosenLettersCache$),
+    tap(([_, chosenLettersCache]: [void, string]) => {
+      for (let i = chosenLettersCache.length; i < Constants.MAX_LETTERS; i++) {
+        const letterType =
+          i % 2 === 0 ? LetterType.Consonant : LetterType.Vowel;
+        this.randomLetterService.setRandomLetterType(letterType);
+      }
+    }),
+    switchMap(() => this.accumulatedChosenLetters$)
+  );
+
   chosenLetters$: Observable<string> = merge(
-    this.initialChosenLetters,
+    this.initialChosenLetters$,
     this.accumulatedChosenLetters$,
     this.resetChosenLetters$,
-    this.shuffledChosenLetters$
+    this.shuffledChosenLetters$,
+    this.autoChosenLetters$
   ).pipe(
     tap((displayLetters) => {
       this.chosenLettersCacheSubject$.next(displayLetters);
@@ -76,5 +95,9 @@ export class ChosenLettersService {
 
   shuffle() {
     this.shuffleSubject$.next();
+  }
+
+  autoSelect() {
+    this.autoSelectSubject$.next();
   }
 }

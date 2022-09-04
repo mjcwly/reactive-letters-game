@@ -8,6 +8,7 @@ import { LetterType } from '../../models/letter-type';
 })
 export class LetterSelectorComponent {
   @Output() letterTypeSelectedEvent = new EventEmitter<LetterType>();
+  @Output() autoSelectChosenLettersEvent = new EventEmitter<void>();
 
   onConsonantClicked(): void {
     this.letterTypeSelectedEvent.emit(LetterType.Consonant);
@@ -15,5 +16,9 @@ export class LetterSelectorComponent {
 
   onVowelClicked(): void {
     this.letterTypeSelectedEvent.emit(LetterType.Vowel);
+  }
+
+  onAutoSelectClicked(): void {
+    this.autoSelectChosenLettersEvent.emit();
   }
 }

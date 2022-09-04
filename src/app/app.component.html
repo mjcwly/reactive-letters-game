@@ -33,6 +33,7 @@
     <letter-selector
       *ngIf="!vm.timerStateModel.isTicking"
       (letterTypeSelectedEvent)="letterTypeSelectedHandler($event)"
+      (autoSelectChosenLettersEvent)="autoSelectChosenLettersHandler()"
     ></letter-selector>
     <countdown-timer
       *ngIf="vm.timerStateModel.isTicking"
