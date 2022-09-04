@@ -75,6 +75,6 @@ export class AppComponent {
   }
 
   shuffleChosenLettersHandler() {
-    this.chosenLettersArrayService.shuffle();
+    this.chosenLettersService.shuffle();
   }
 }

@@ -18,6 +18,8 @@ import { RandomLetterService } from './random-letter.service';
   providedIn: 'root',
 })
 export class ChosenLettersService {
+  private shuffleSubject$ = new Subject<void>();
+
   private chosenLettersCacheSubject$ = new BehaviorSubject<string>('');
   private chosenLettersCache$ = this.chosenLettersCacheSubject$.asObservable();
 
@@ -40,10 +42,21 @@ export class ChosenLettersService {
       })
     );
 
+  private shuffledChosenLetters$ = this.shuffleSubject$.pipe(
+    withLatestFrom(this.chosenLettersCache$),
+    map(([_, chosenLetters]) => {
+      return chosenLetters
+        .split('')
+        .sort(() => 0.5 - Math.random())
+        .join('');
+    })
+  );
+
   chosenLetters$: Observable<string> = merge(
     this.initialChosenLetters,
     this.accumulatedChosenLetters$,
-    this.resetChosenLetters$
+    this.resetChosenLetters$,
+    this.shuffledChosenLetters$
   ).pipe(
     tap((displayLetters) => {
       this.chosenLettersCacheSubject$.next(displayLetters);
@@ -59,5 +72,9 @@ export class ChosenLettersService {
 
   reset() {
     this.resetChosenLettersSubject$.next();
+  }
+
+  shuffle() {
+    this.shuffleSubject$.next();
   }
 }

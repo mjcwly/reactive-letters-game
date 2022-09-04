@@ -24,21 +24,17 @@ import { TypedLettersService } from './typed-letters.service';
   providedIn: 'root',
 })
 export class ChosenLettersArrayService {
-  private shuffleSubject$ = new Subject<void>();
-
   private fillChar$: Observable<ChosenLetter> =
     this.gameStateService.gameStateModel$.pipe(
-      map((gameStateModel: GameStateModel) =>
-        gameStateModel.isLetterSelection ? QuestionMark : Blank
-      )
+      map((gameStateModel: GameStateModel) => {
+        return gameStateModel.isLetterSelection ? QuestionMark : Blank;
+      })
     );
 
-  private derivedChosenLetterArray$: Observable<ChosenLetter[]> = combineLatest(
-    [
-      this.chosenLettersService.chosenLetters$,
-      this.typedLettersService.typedLetters$,
-    ]
-  ).pipe(
+  chosenLetterArray$: Observable<ChosenLetter[]> = combineLatest([
+    this.chosenLettersService.chosenLetters$,
+    this.typedLettersService.typedLetters$,
+  ]).pipe(
     withLatestFrom(this.fillChar$),
     map(([[chosenLetters, typedLetters], fillChar]) => {
       const chosenLettersArr = [...chosenLetters];
@@ -74,25 +70,9 @@ export class ChosenLettersArrayService {
     })
   );
 
-  private shuffledChosenLettersArray$ = this.shuffleSubject$.pipe(
-    withLatestFrom(this.derivedChosenLetterArray$),
-    map(([_, chosenLetterArray]) => {
-      return chosenLetterArray.sort(() => 0.5 - Math.random());
-    })
-  );
-
-  chosenLetterArray$ = merge(
-    this.derivedChosenLetterArray$,
-    this.shuffledChosenLettersArray$
-  );
-
   constructor(
     private readonly gameStateService: GameStateService,
     private readonly chosenLettersService: ChosenLettersService,
     private readonly typedLettersService: TypedLettersService
   ) {}
-
-  shuffle() {
-    this.shuffleSubject$.next();
-  }
 }
