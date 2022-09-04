@@ -4,10 +4,8 @@ import {
   combineLatest,
   EMPTY,
   map,
-  merge,
   Observable,
-  Subject,
-  withLatestFrom,
+  distinctUntilChanged,
 } from 'rxjs';
 import { Constants } from '../helpers/constants';
 import {
@@ -28,15 +26,16 @@ export class ChosenLettersArrayService {
     this.gameStateService.gameStateModel$.pipe(
       map((gameStateModel: GameStateModel) => {
         return gameStateModel.isLetterSelection ? QuestionMark : Blank;
-      })
+      }),
+      distinctUntilChanged()
     );
 
   chosenLetterArray$: Observable<ChosenLetter[]> = combineLatest([
     this.chosenLettersService.chosenLetters$,
     this.typedLettersService.typedLetters$,
+    this.fillChar$,
   ]).pipe(
-    withLatestFrom(this.fillChar$),
-    map(([[chosenLetters, typedLetters], fillChar]) => {
+    map(([chosenLetters, typedLetters, fillChar]) => {
       const chosenLettersArr = [...chosenLetters];
       const prefilledChosenLettersArr = new Array(Constants.MAX_LETTERS).fill(
         fillChar
