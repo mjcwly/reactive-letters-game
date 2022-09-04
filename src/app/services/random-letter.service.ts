@@ -12,8 +12,8 @@ export class RandomLetterService {
   private letterSet$: Observable<string> = this.randomLetterType$.pipe(
     map((randomLetterType: LetterType) => {
       return randomLetterType === LetterType.Vowel
-        ? Constants.VOWELS_LETTER_SET
-        : Constants.CONSONANTS_LETTER_SET;
+        ? Constants.VOWELS
+        : Constants.CONSONANTS;
     })
   );
 
