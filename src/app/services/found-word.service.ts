@@ -37,12 +37,20 @@ export class FoundWordService {
     this.keyPressService.enterKeyPress$.pipe(
       withLatestFrom(
         this.typedLettersService.typedLetters$,
-        this.gameStateService.gameStateModel$
+        this.gameStateService.gameStateModel$,
+        this.foundWordArrayCache$
       ),
-      filter(
-        ([_, typedLetters, gameStateModel]) =>
-          !!typedLetters && gameStateModel.isPlayingGame
-      ),
+      filter(([_, typedLetters, gameStateModel]) => {
+        return !!typedLetters && gameStateModel.isPlayingGame;
+      }),
+      filter(([_, typedLetters, __, foundWordArray]) => {
+        const exists =
+          foundWordArray.filter(
+            (existingFoundWord: FoundWord) =>
+              existingFoundWord.word === typedLetters
+          ).length > 0;
+        return !exists;
+      }),
       switchMap(([_, typedLetters]) =>
         this.dictionaryApiService.getWordDefinition(typedLetters).pipe(
           map(() => {
